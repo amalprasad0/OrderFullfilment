@@ -1,0 +1,136 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  padding: 20px;
+}
+
+.register-content {
+  width: 100%;
+  max-width: 350px;
+}
+
+.register-logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.register-logo img {
+  width: 120px;
+  object-fit: contain;
+}
+
+.register-box {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.register-box h1 {
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: #111;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  color: #111;
+}
+
+.form-group input {
+  width: 100%;
+  height: 31px;
+  padding: 3px 7px;
+  border: 1px solid #a6a6a6;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 1px 0 rgba(0,0,0,.07) inset;
+  outline: 0;
+  font-size: 13px;
+  line-height: normal;
+  color: #111;
+}
+
+.form-group input:disabled {
+  background-color: #f3f3f3;
+  cursor: not-allowed;
+}
+
+.form-group input:focus {
+  border-color: #e77600;
+  box-shadow: 0 0 3px 2px rgba(228,121,17,.5);
+}
+
+.register-button {
+  width: 100%;
+  height: 31px;
+  background: linear-gradient(to bottom,#f7dfa5,#f0c14b);
+  border: 1px solid #a88734;
+  border-radius: 3px;
+  color: #111;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.register-button:disabled {
+  background: #f3f3f3;
+  border-color: #a6a6a6;
+  cursor: not-allowed;
+}
+
+.register-button.loading {
+  background: #f3f3f3;
+  border-color: #a6a6a6;
+  cursor: wait;
+}
+
+.register-button:hover:not(:disabled) {
+  background: linear-gradient(to bottom,#f5d78e,#eeb933);
+}
+
+.register-footer {
+  margin-top: 26px;
+  text-align: center;
+  font-size: 12px;
+  color: #111;
+}
+
+.register-footer span {
+  color: #0066c0;
+  cursor: pointer;
+}
+
+.register-footer span:hover {
+  color: #c45500;
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .register-content {
+    max-width: 100%;
+  }
+  
+  .register-box {
+    padding: 16px;
+  }
+} 

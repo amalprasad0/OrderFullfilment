@@ -10,12 +10,14 @@ import com.user_service.user_service.models.userRegister;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
 @RequestMapping("/userauth")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserAuthenticationController {
     @Autowired
     private IUserAuthentication User;
