@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "product-service"
+		},
+		{
+			"path": "user-service"
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic"
+	}
+}
