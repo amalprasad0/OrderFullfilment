@@ -34,7 +34,7 @@ public class Product {
     @Column(nullable = false)
     private String Brand;
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JoinColumn(name = "category_id", nullable = false)
     private ProductCategory productCategory;
     @Column(nullable = false)
     private long createdBy;
