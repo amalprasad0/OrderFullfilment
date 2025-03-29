@@ -1,5 +1,6 @@
 package com.product_service.product_service.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -39,5 +40,14 @@ public class ProductCategoryService implements IProductCategory {
     @Override
     public Optional<ProductCategory> findById(Long id) {
         return productCategoryRespo.findById(id);
+    }
+    @Override
+    public Response<List<ProductCategory>> GetAllCategories() {
+        try {
+            var categories = productCategoryRespo.findAll();
+            return Response.success(categories, "Categories retrieved successfully");
+        } catch (Exception e) {
+            return Response.error("Failed to retrieve categories: " + e.getMessage());
+        }
     }
 }
