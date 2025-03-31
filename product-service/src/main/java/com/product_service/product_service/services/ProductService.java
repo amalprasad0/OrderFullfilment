@@ -1,5 +1,7 @@
 package com.product_service.product_service.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +43,30 @@ public class ProductService implements IProductService {
             return Response.success(id, "Product added successfully");
         }catch(Exception e){
             return Response.error("Failed to add product: " + e.getMessage());
+        }
+    }
+    @Override
+    public Response<List<Product>> GetAllProduct(){
+        try{
+            var products = productRepository.findAll();
+            if (products.isEmpty()) {
+                return Response.error("Failed to get all products: No products found");
+            }
+            return Response.success(products, "Products retrieved successfully");
+        }catch(Exception e){
+            return Response.error("Failed to get all products: " + e.getMessage());
+        }
+    }
+    @Override
+    public Response<Product> GetProductById(Long id) {
+        try{
+            var productOpt = productRepository.findById(id);
+            if (productOpt.isEmpty()) {
+                return Response.error("Failed to get product: Product ID does not exist");
+            }
+            return Response.success(productOpt.get(), "Product retrieved successfully");
+        }catch(Exception e){
+            return Response.error("Failed to get product: " + e.getMessage());
         }
     }
     
