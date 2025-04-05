@@ -12,4 +12,7 @@ import lombok.NoArgsConstructor;
 public class ReserveStock {
     public Long productId;
     public int StockReserved;
+    public int orderId;
+    public Long reservedBy;
+
 }
