@@ -1,0 +1,10 @@
+package com.product_service.product_service.interfaces;
+
+import com.product_service.product_service.models.AddInventory;
+import com.product_service.product_service.models.Response;
+
+public interface IStockInventoryService {
+
+    public Response<Long> addInventoryStock(AddInventory entity);
+    
+}

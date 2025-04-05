@@ -1,0 +1,182 @@
+{
+  "v": 6,
+  "id": "cm8lnhp8e001bfdm0d5bu4vg9",
+  "name": "Amazon Clone ",
+  "folders": [
+    {
+      "v": 6,
+      "id": "cm8lni1l0000o42k3qeo4rgu8",
+      "name": "User Service",
+      "folders": [],
+      "requests": [
+        {
+          "v": "11",
+          "name": "RegisterUser",
+          "method": "GET",
+          "endpoint": "http://localhost:8080/products/product/5",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "Login User",
+          "method": "POST",
+          "endpoint": "http://localhost:8080/userauth/registerUser",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"email\":\"amalprasad354@gmail.com\",\n  \"password\":\"amalkp@141\",\n  \"firstName\":\"Amal\",\n  \"lastName\":\"Prasad\",\n  \"phone\":\"7306557465\",\n  \"username\":\"amalkp\"\n  \n  \n}"
+          },
+          "requestVariables": [],
+          "responses": {}
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "_ref_id": "coll_m8wjgwx5_afd6534f-8cd7-438b-862b-44817e5ce76b"
+    },
+    {
+      "v": 6,
+      "id": "cm8ubjpbi0kmmmbs8e23re23c",
+      "name": "product-service",
+      "folders": [],
+      "requests": [
+        {
+          "v": "11",
+          "name": "AddCategory",
+          "method": "GET",
+          "endpoint": "https://echo.hoppscotch.io",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "AddProduct",
+          "method": "GET",
+          "endpoint": "https://echo.hoppscotch.io",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "GetAllCategories",
+          "method": "GET",
+          "endpoint": "https://echo.hoppscotch.io",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "GetAllProducts",
+          "method": "GET",
+          "endpoint": "https://echo.hoppscotch.io",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        },
+        {
+          "v": "11",
+          "name": "getproductbyid",
+          "method": "GET",
+          "endpoint": "https://echo.hoppscotch.io",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {}
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "_ref_id": "coll_m8wjgwx5_107d4493-2272-4598-bd5b-41dcef75040d"
+    }
+  ],
+  "requests": [],
+  "auth": {
+    "authType": "inherit",
+    "authActive": true
+  },
+  "headers": [],
+  "_ref_id": "coll_m8wjgwx5_b48469a2-dcf9-4c19-8254-ed9048dea1d2"
+}
