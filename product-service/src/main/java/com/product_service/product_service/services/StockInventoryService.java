@@ -84,6 +84,7 @@ public class StockInventoryService implements IStockInventoryService {
             stockReservations.setCreatedBy(entity.getReservedBy());
             stockReservations.setUpdatedBy(entity.getReservedBy());
             stockReservations.setOrderId(entity.getOrderId());
+            stockReservations.setStatus("reserved");
             var inventory = inventoryOpt.get();
             var currentAvailableStock = inventory.getStock_available();
             if (currentAvailableStock < entity.getStockReserved()) {

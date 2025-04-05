@@ -39,7 +39,8 @@ public class StockReservations {
     @PrePersist
     public void prePersist() {
         this.reservedAt = LocalDateTime.now();
-        this.releasedAt = LocalDateTime.now();
+        this.releasedAt = null;
+        
     }
     @PreUpdate
     public void preUpdate() {
