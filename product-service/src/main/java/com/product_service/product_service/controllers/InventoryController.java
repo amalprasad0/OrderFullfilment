@@ -28,5 +28,8 @@ public class InventoryController {
     public ResponseEntity<Response<Boolean>> reserveStock(@RequestBody ReserveStock entity) {
         return ResponseEntity.ok(stockInventoryService.reserveStock(entity));
     }
-
+    @PostMapping("releaseStock")
+    public ResponseEntity<Response<Boolean>> releaseStock(@RequestBody ReserveStock entity) {
+        return ResponseEntity.ok(stockInventoryService.releaseStock(entity));
+    }
 }

@@ -8,5 +8,6 @@ public interface IStockInventoryService {
 
     public Response<Long> addInventoryStock(AddInventory entity);
     public Response<Boolean> reserveStock(ReserveStock entity);
+    public Response<Boolean> releaseStock(ReserveStock entity);
 
 }
