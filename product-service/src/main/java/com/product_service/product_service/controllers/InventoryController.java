@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.product_service.product_service.interfaces.IStockInventoryService;
 import com.product_service.product_service.models.AddInventory;
+import com.product_service.product_service.models.ReserveStock;
 import com.product_service.product_service.models.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,10 @@ public class InventoryController {
     @PostMapping("addInventoryStock")
     public ResponseEntity<Response<Long>> AddInventoryStock(@RequestBody AddInventory entity) {
         return ResponseEntity.ok(stockInventoryService.addInventoryStock(entity));
+    }
+    @PostMapping ("reserveStock")
+    public ResponseEntity<Response<Boolean>> reserveStock(@RequestBody ReserveStock entity) {
+        return ResponseEntity.ok(stockInventoryService.reserveStock(entity));
     }
 
 }

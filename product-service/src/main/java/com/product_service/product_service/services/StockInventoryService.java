@@ -12,6 +12,7 @@ import com.product_service.product_service.repository.InventoryRespository;
 import com.product_service.product_service.repository.ProductRepository;
 
 import jakarta.persistence.criteria.CriteriaBuilder.In;
+
 @Service
 public class StockInventoryService implements IStockInventoryService {
     @Autowired
@@ -50,6 +51,44 @@ public class StockInventoryService implements IStockInventoryService {
             return Response.success(id, "Inventory stock added successfully");
         } catch (Exception e) {
             return Response.error("Error adding inventory stock" + e.getMessage());
+        }
+    }
+
+    @Override
+    public Response<Boolean> reserveStock(com.product_service.product_service.models.ReserveStock entity) {
+        try {
+            if (entity.getProductId() == null || entity.getProductId() <= 0) {
+                return Response.error("Failed to reserve stock: Product ID is invalid");
+            }
+            if (entity.getStockReserved() < 0) {
+                return Response.error("Failed to reserve stock: Stock reserved cannot be negative");
+            }
+            var productOpt = productRepository.findById(entity.getProductId());
+            if (productOpt.isEmpty()) {
+                return Response.error("Failed to reserve stock: Product ID does not exist");
+            }
+            var product = productOpt.get();
+            var inventoryOpt = inventoryRepository.findAll().stream()
+                    .filter(i -> i.getProductId().getId().equals(product.getId()))
+                    .findFirst();
+            if (inventoryOpt.isEmpty()) {
+                return Response.error("Failed to reserve stock: Inventory not found for the product");
+            }
+            var inventory = inventoryOpt.get();
+            var currentAvailableStock = inventory.getStock_available();
+            if (currentAvailableStock < entity.getStockReserved()) {
+                return Response.error("Failed to reserve stock: Not enough available stock");
+            }
+            inventory.setStock_available(currentAvailableStock - entity.getStockReserved());
+
+            var savedInventory = inventoryRepository.save(inventory);
+            var id = savedInventory.getId();
+            if (id == null) {
+                return Response.error("Failed to reserve stock: ID is null");
+            }
+            return Response.success(true, "Stock reserved successfully");
+        } catch (Exception e) {
+            return Response.error("Error reserving stock" + e.getMessage());
         }
     }
 
