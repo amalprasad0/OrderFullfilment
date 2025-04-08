@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.order_service.interfaces.IOrderService;
+import com.order_service.models.OrderCancelRequest;
 import com.order_service.models.OrderRequest;
 import com.order_service.models.Response;
 
@@ -24,5 +25,9 @@ public class OrderController {
     @PostMapping("createOrder")
     public ResponseEntity<Response<Long>> postMethodName(@RequestBody OrderRequest entity) {
         return ResponseEntity.ok(orderService.createOrder(entity));
+    }
+    @PostMapping("canceledOrder")
+    public ResponseEntity<Response<Boolean>> postMethodName(@RequestBody OrderCancelRequest orderCancelRequest) {
+        return ResponseEntity.ok(orderService.canceledOrder(orderCancelRequest));
     }
 }
