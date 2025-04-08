@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.order_service.interfaces.IOrderService;
 import com.order_service.models.OrderCancelRequest;
 import com.order_service.models.OrderRequest;
+import com.order_service.models.OrderUpdateRequest;
 import com.order_service.models.Response;
 
 import org.springframework.http.ResponseEntity;
@@ -23,11 +24,23 @@ public class OrderController {
         this.orderService = orderService;
     }
     @PostMapping("createOrder")
-    public ResponseEntity<Response<Long>> postMethodName(@RequestBody OrderRequest entity) {
+    public ResponseEntity<Response<Long>> createOrder(@RequestBody OrderRequest entity) {
         return ResponseEntity.ok(orderService.createOrder(entity));
     }
     @PostMapping("canceledOrder")
-    public ResponseEntity<Response<Boolean>> postMethodName(@RequestBody OrderCancelRequest orderCancelRequest) {
+    public ResponseEntity<Response<Boolean>> orderCancel(@RequestBody OrderCancelRequest orderCancelRequest) {
         return ResponseEntity.ok(orderService.canceledOrder(orderCancelRequest));
+    }
+    @PostMapping("updateOrder")
+    public ResponseEntity<Response<Boolean>> updateOrder(@RequestBody OrderUpdateRequest orderUpdateRequest) {
+        return ResponseEntity.ok(orderService.updateOrder(orderUpdateRequest));
+    }
+    @PostMapping("getOrderById")
+    public ResponseEntity<Response<Boolean>> getOrderById(@RequestBody Long orderId) {
+        return ResponseEntity.ok(orderService.getOrderById(orderId));
+    }
+    @PostMapping("getOrderByUserId")
+    public ResponseEntity<Response<Boolean>> getOrderByUserId(@RequestBody Long userId) {
+        return ResponseEntity.ok(orderService.getOrderByUserId(userId));
     }
 }

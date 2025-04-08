@@ -8,6 +8,7 @@ import com.order_service.entity.Orders;
 import com.order_service.interfaces.IOrderService;
 import com.order_service.models.OrderCancelRequest;
 import com.order_service.models.OrderRequest;
+import com.order_service.models.OrderUpdateRequest;
 import com.order_service.models.Response;
 import com.order_service.repository.OrderPaymentRepository;
 import com.order_service.repository.OrdersRepository;
@@ -101,4 +102,85 @@ public class OrderService implements IOrderService {
             return Response.error("An error occurred while canceling the order: " + e.getMessage());
         }
     }
+    @Override
+    public Response<Boolean> updateOrder(OrderUpdateRequest orderUpdateRequest) {
+        try {
+            if (orderUpdateRequest == null) {
+                return Response.error("Order update request is empty");
+            }
+            if (orderUpdateRequest.getOrderId() <= 0) {
+                return Response.error("Order ID is invalid");
+            }
+            if (orderUpdateRequest.getDeliveryAddress() == null || orderUpdateRequest.getDeliveryAddress().isEmpty()) {
+                return Response.error("Delivery address is invalid");
+            }
+            if (orderUpdateRequest.getPaymentMethod() == null || orderUpdateRequest.getPaymentMethod().isEmpty()) {
+                return Response.error("Payment method is invalid");
+            }
+            if (orderUpdateRequest.getPaymentStatus() == null || orderUpdateRequest.getPaymentStatus().isEmpty()) {
+                return Response.error("Payment status is invalid");
+            }
+            
+            var order = orderRepository.findById(orderUpdateRequest.getOrderId());
+            if (order.isPresent()) {
+                Orders orders = order.get();
+                orders.setDeliveryAddress(orderUpdateRequest.getDeliveryAddress());
+                orders.setPaymentMethod(orderUpdateRequest.getPaymentMethod());
+                orders.setPaymentStatus(orderUpdateRequest.getPaymentStatus());
+                orders.setProductId(orderUpdateRequest.getProductId());
+                orders.setQuantity(orderUpdateRequest.getQuantity());
+                orders.setTotalPrice(orderUpdateRequest.getTotalPrice());
+                orders.setUserId(orderUpdateRequest.getUserId());
+                // orders.setOrderStatus("PENDING");
+                var savedOrder = orderRepository.save(orders);
+                if (savedOrder != null) {
+                    return Response.success(true, "Order updated successfully");
+                } else {
+                    return Response.error("Failed to update order");
+                }
+            } else {
+                return Response.error("Order not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.error("An error occurred while updating the order: " + e.getMessage());
+        }
+    }
+    @Override
+    public Response<Boolean> getOrderById(Long orderId) {
+        try {
+            if (orderId == null || orderId <= 0) {
+                return Response.error("Order ID is invalid");
+            }
+            var order = orderRepository.findById(orderId);
+            if (order.isPresent()) {
+                return Response.success(true, "Order found successfully");
+            } else {
+                return Response.error("Order not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.error("An error occurred while fetching the order: " + e.getMessage());
+        }
+    }
+    @Override
+    public Response<Boolean> getOrderByUserId(Long userId) {
+        try {
+            if (userId == null || userId <= 0) {
+                return Response.error("User ID is invalid");
+            }
+            var order = orderRepository.findAll().stream()
+                    .filter(o -> o.getUserId() == userId)
+                    .findFirst()
+                    .orElse(null);
+            if (order != null) {
+                return Response.success(true, "Order found successfully");
+            } else {
+                return Response.error("Order not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.error("An error occurred while fetching the order: " + e.getMessage());
+        }
+    }   
 }
