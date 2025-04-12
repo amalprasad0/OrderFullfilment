@@ -14,4 +14,5 @@ public class CreatePaymentLink {
     public int unit_amount;
     public String currency ;
     public int quantity;
+    public long orderId;
 }
