@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "user-service"
+		},
+		{
+			"path": "order-service"
 		}
 	],
 	"settings": {
