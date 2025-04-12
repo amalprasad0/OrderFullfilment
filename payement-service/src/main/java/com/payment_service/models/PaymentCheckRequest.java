@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreatePaymentLink {
-    public String productName;
-    public int unit_amount;
-    public String currency ;
-    public int quantity;
+public class PaymentCheckRequest {
+    public String paymentLinkId;
 }
