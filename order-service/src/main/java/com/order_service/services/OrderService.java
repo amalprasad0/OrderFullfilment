@@ -1,18 +1,22 @@
 package com.order_service.services;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.order_service.entity.OrderPaymentMap;
 import com.order_service.entity.Orders;
+import com.order_service.feign.ProductClient;
 import com.order_service.interfaces.IOrderService;
 import com.order_service.models.OrderCancelRequest;
+import com.order_service.models.OrderDetails;
 import com.order_service.models.OrderRequest;
 import com.order_service.models.OrderUpdateRequest;
 import com.order_service.models.Response;
 import com.order_service.repository.OrderPaymentRepository;
 import com.order_service.repository.OrdersRepository;
-
 
 @Service
 public class OrderService implements IOrderService {
@@ -20,6 +24,9 @@ public class OrderService implements IOrderService {
     private OrdersRepository orderRepository;
     @Autowired
     private OrderPaymentRepository orderPayementRepository;
+    @Autowired
+    private ProductClient productClient;
+
     @Override
     public Response<Long> createOrder(OrderRequest orderRequest) {
         try {
@@ -47,7 +54,7 @@ public class OrderService implements IOrderService {
             if (orderRequest.getPaymentStatus() == null || orderRequest.getPaymentStatus().isEmpty()) {
                 return Response.error("Payment status is invalid");
             }
-            
+
             Orders order = new Orders();
             order.setDeliveryAddress(orderRequest.getDeliveryAddress());
             order.setPaymentMethod(orderRequest.getPaymentMethod());
@@ -72,15 +79,15 @@ public class OrderService implements IOrderService {
             if (savedOrder != null) {
                 return Response.success(savedOrder.getId(), "Order created successfully");
             }
-           
 
             return Response.error("Failed to create order");
         } catch (Exception e) {
             e.printStackTrace();
             return Response.error("An error occurred while creating the order: " + e.getMessage());
         }
-        
+
     }
+
     @Override
     public Response<Boolean> canceledOrder(OrderCancelRequest orderCancelRequest) {
         try {
@@ -102,6 +109,7 @@ public class OrderService implements IOrderService {
             return Response.error("An error occurred while canceling the order: " + e.getMessage());
         }
     }
+
     @Override
     public Response<Boolean> updateOrder(OrderUpdateRequest orderUpdateRequest) {
         try {
@@ -120,7 +128,7 @@ public class OrderService implements IOrderService {
             if (orderUpdateRequest.getPaymentStatus() == null || orderUpdateRequest.getPaymentStatus().isEmpty()) {
                 return Response.error("Payment status is invalid");
             }
-            
+
             var order = orderRepository.findById(orderUpdateRequest.getOrderId());
             if (order.isPresent()) {
                 Orders orders = order.get();
@@ -146,15 +154,45 @@ public class OrderService implements IOrderService {
             return Response.error("An error occurred while updating the order: " + e.getMessage());
         }
     }
+
     @Override
-    public Response<Boolean> getOrderById(Long orderId) {
+    public Response<OrderDetails> getOrderById(Long orderId) {
         try {
             if (orderId == null || orderId <= 0) {
                 return Response.error("Order ID is invalid");
             }
             var order = orderRepository.findById(orderId);
             if (order.isPresent()) {
-                return Response.success(true, "Order found successfully");
+                ResponseEntity<Map<String, Object>> productResponse = productClient
+                        .getProductById(Long.parseLong(order.get().getProductId()));
+                Map<String, Object> responseBody = productResponse.getBody();
+                boolean success = (boolean) responseBody.get("success");
+                if (!success)
+                    return Response.error("Couldn't find the Product Details");
+                Map<String, Object> productData = (Map<String, Object>) responseBody.get("data");
+
+                String productName = (String) productData.get("productName");
+                String productDescription = (String) productData.get("productDescription");
+                String productImageUrl = (String) productData.get("productImageUrl");
+                String brand = (String) productData.get("brand");
+
+                @SuppressWarnings("unchecked")
+                Map<String, Object> productCategory = (Map<String, Object>) productData.get("productCategory");
+                String categoryName = (String) productCategory.get("categoryName");
+                OrderDetails orderDetails = new OrderDetails();
+                orderDetails.setOrderId(orderId);
+                orderDetails.setOrderDate(order.get().getOrderDate());
+                orderDetails.setDeliveryAddress(order.get().getDeliveryAddress());
+                orderDetails.setOrderStatus(order.get().getOrderStatus());
+                // orderDetails.getPaymentStatus(order.get().)
+                orderDetails.setProductId(Long.parseLong(order.get().getProductId()));
+                orderDetails.setProductName(productName);
+                orderDetails.setProductImgUrl(productImageUrl);
+                orderDetails.setQuantity(order.get().getQuantity());
+                orderDetails.setUserId(order.get().getUserId());
+
+                System.out.println("response" + productResponse);
+                return Response.success(orderDetails, "Order found successfully");
             } else {
                 return Response.error("Order not found");
             }
@@ -163,6 +201,7 @@ public class OrderService implements IOrderService {
             return Response.error("An error occurred while fetching the order: " + e.getMessage());
         }
     }
+
     @Override
     public Response<Boolean> getOrderByUserId(Long userId) {
         try {
@@ -182,5 +221,5 @@ public class OrderService implements IOrderService {
             e.printStackTrace();
             return Response.error("An error occurred while fetching the order: " + e.getMessage());
         }
-    }   
+    }
 }
