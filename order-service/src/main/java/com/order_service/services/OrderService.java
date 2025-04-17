@@ -203,17 +203,48 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Response<Boolean> getOrderByUserId(Long userId) {
+    public Response<OrderDetails> getOrderByUserId(Long userId) {
         try {
             if (userId == null || userId <= 0) {
                 return Response.error("User ID is invalid");
             }
-            var order = orderRepository.findAll().stream()
+            Orders order = orderRepository.findAll().stream()
                     .filter(o -> o.getUserId() == userId)
                     .findFirst()
                     .orElse(null);
             if (order != null) {
-                return Response.success(true, "Order found successfully");
+                ResponseEntity<Map<String, Object>> productResponse = productClient
+                        .getProductById(Long.parseLong(order.getProductId()));
+                Map<String, Object> responseBody = productResponse.getBody();
+                boolean success = (boolean) responseBody.get("success");
+                if (!success)
+                    return Response.error("Couldn't find the Product Details");
+
+                @SuppressWarnings("unchecked")
+                Map<String, Object> productData = (Map<String, Object>) responseBody.get("data");
+
+                String productName = (String) productData.get("productName");
+                String productDescription = (String) productData.get("productDescription");
+                String productImageUrl = (String) productData.get("productImageUrl");
+                String brand = (String) productData.get("brand");
+
+                @SuppressWarnings("unchecked")
+                Map<String, Object> productCategory = (Map<String, Object>) productData.get("productCategory");
+                String categoryName = (String) productCategory.get("categoryName");
+
+                OrderDetails orderDetails = new OrderDetails();
+                orderDetails.setOrderId(order.getId());
+                orderDetails.setOrderDate(order.getOrderDate());
+                orderDetails.setDeliveryAddress(order.getDeliveryAddress());
+                orderDetails.setOrderStatus(order.getOrderStatus());
+                orderDetails.setProductId(Long.parseLong(order.getProductId()));
+                orderDetails.setProductName(productName);
+                orderDetails.setProductImgUrl(productImageUrl);
+                orderDetails.setQuantity(order.getQuantity());
+                orderDetails.setUserId(order.getUserId());
+
+                System.out.println("response" + productResponse);
+                return Response.success(orderDetails, "Order found successfully");
             } else {
                 return Response.error("Order not found");
             }

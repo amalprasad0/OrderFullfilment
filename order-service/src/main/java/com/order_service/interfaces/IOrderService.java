@@ -11,5 +11,5 @@ public interface IOrderService {
     public Response<Boolean> canceledOrder(OrderCancelRequest orderCancelRequest) ;
     public Response<Boolean> updateOrder(OrderUpdateRequest orderUpdateRequest) ;
      public Response<OrderDetails> getOrderById(Long orderId) ;
-    public Response<Boolean> getOrderByUserId(Long userId) ;
+     Response<OrderDetails> getOrderByUserId(Long userId) ;
 }

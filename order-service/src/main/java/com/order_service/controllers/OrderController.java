@@ -45,7 +45,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrderById(orderId));
     }
     @PostMapping("getOrderByUserId")
-    public ResponseEntity<Response<Boolean>> getOrderByUserId(@RequestParam Long userId) {
+    public ResponseEntity<Response<OrderDetails>> getOrderByUserId(@RequestParam Long userId) {
         return ResponseEntity.ok(orderService.getOrderByUserId(userId));
     }
 }
