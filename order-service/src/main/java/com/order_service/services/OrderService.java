@@ -224,14 +224,8 @@ public class OrderService implements IOrderService {
                 Map<String, Object> productData = (Map<String, Object>) responseBody.get("data");
 
                 String productName = (String) productData.get("productName");
-                String productDescription = (String) productData.get("productDescription");
                 String productImageUrl = (String) productData.get("productImageUrl");
-                String brand = (String) productData.get("brand");
-
                 @SuppressWarnings("unchecked")
-                Map<String, Object> productCategory = (Map<String, Object>) productData.get("productCategory");
-                String categoryName = (String) productCategory.get("categoryName");
-
                 OrderDetails orderDetails = new OrderDetails();
                 orderDetails.setOrderId(order.getId());
                 orderDetails.setOrderDate(order.getOrderDate());

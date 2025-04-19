@@ -3,16 +3,12 @@ package com.order_service.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.order_service.feign.ProductClient;
 import com.order_service.interfaces.IOrderService;
 import com.order_service.models.OrderCancelRequest;
 import com.order_service.models.OrderDetails;
 import com.order_service.models.OrderRequest;
 import com.order_service.models.OrderUpdateRequest;
 import com.order_service.models.Response;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
