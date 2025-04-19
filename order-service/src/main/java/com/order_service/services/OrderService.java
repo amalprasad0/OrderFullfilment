@@ -3,6 +3,8 @@ package com.order_service.services;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -111,6 +113,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @CachePut(cacheNames = "order", key = "#p0.userId")
     public Response<Boolean> updateOrder(OrderUpdateRequest orderUpdateRequest) {
         try {
             if (orderUpdateRequest == null) {
@@ -156,6 +159,8 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @Cacheable(value = "order", key = "#orderId")
+
     public Response<OrderDetails> getOrderById(Long orderId) {
         try {
             if (orderId == null || orderId <= 0) {
@@ -203,6 +208,8 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @Cacheable(value = "order", key = "#userId")
+
     public Response<OrderDetails> getOrderByUserId(Long userId) {
         try {
             if (userId == null || userId <= 0) {

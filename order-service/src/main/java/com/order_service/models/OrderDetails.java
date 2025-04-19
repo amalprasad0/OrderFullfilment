@@ -1,5 +1,6 @@
 package com.order_service.models;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -11,7 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderDetails {
+public class OrderDetails implements Serializable{
+    private static final long serialVersionUID = 1L;
     private Long orderId;
     private String productName;
     private Long productId;
