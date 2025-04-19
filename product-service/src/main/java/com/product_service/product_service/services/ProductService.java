@@ -11,6 +11,8 @@ import com.product_service.product_service.interfaces.IProductService;
 import com.product_service.product_service.models.Response;
 import com.product_service.product_service.repository.ProductRepository;
 
+import org.springframework.cache.annotation.Cacheable;
+
 @Service
 public class ProductService implements IProductService {
     @Autowired
@@ -58,6 +60,7 @@ public class ProductService implements IProductService {
         }
     }
     @Override
+    @Cacheable(value = "product", key = "#id")
     public Response<Product> GetProductById(Long id) {
         try{
             var productOpt = productRepository.findById(id);

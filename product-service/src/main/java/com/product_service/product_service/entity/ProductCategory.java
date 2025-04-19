@@ -1,5 +1,8 @@
 package com.product_service.product_service.entity;
 
+import java.io.Serializable;
+
+import io.netty.buffer.search.SearchProcessor;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -11,7 +14,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductCategory {
+public class ProductCategory implements Serializable {
+    private static final long serialVersionUID = 1L;
     @jakarta.persistence.Id
     @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;

@@ -11,6 +11,7 @@ import com.product_service.product_service.models.Response;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,9 +36,13 @@ public class ProductController {
 
         return ResponseEntity.ok(productService.AddProduct(entity));
     }
+
     @PostMapping("getproductbyid")
+    // @Cacheable(value = "product", key = "#id")
     public ResponseEntity<Response<Product>> getProductById(@RequestParam Long id) {
-        return ResponseEntity.ok(productService.GetProductById(id));
+        // Cache the Response object instead of ResponseEntity
+        Response<Product> productResponse = productService.GetProductById(id);
+        return ResponseEntity.ok(productResponse);
     }
 
 }
