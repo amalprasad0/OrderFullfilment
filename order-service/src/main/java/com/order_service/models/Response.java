@@ -1,5 +1,7 @@
 package com.order_service.models;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Response<T> {
+public class Response<T> implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String responseMessage = null;
     private boolean success;
     private T data;

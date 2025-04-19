@@ -1,14 +1,14 @@
 package com.order_service.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.order_service.interfaces.IOrderService;
 import com.order_service.models.OrderCancelRequest;
+import com.order_service.models.OrderDetails;
 import com.order_service.models.OrderRequest;
 import com.order_service.models.OrderUpdateRequest;
 import com.order_service.models.Response;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class OrderController {
     private final IOrderService orderService;
+    
     public OrderController(IOrderService orderService) {
         this.orderService = orderService;
     }
@@ -36,11 +37,11 @@ public class OrderController {
         return ResponseEntity.ok(orderService.updateOrder(orderUpdateRequest));
     }
     @PostMapping("getOrderById")
-    public ResponseEntity<Response<Boolean>> getOrderById(@RequestBody Long orderId) {
+    public ResponseEntity<Response<OrderDetails>> getOrderById(@RequestParam Long orderId) {
         return ResponseEntity.ok(orderService.getOrderById(orderId));
     }
     @PostMapping("getOrderByUserId")
-    public ResponseEntity<Response<Boolean>> getOrderByUserId(@RequestBody Long userId) {
+    public ResponseEntity<Response<OrderDetails>> getOrderByUserId(@RequestParam Long userId) {
         return ResponseEntity.ok(orderService.getOrderByUserId(userId));
     }
 }

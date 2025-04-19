@@ -1,5 +1,7 @@
 package com.order_service.entity;
 
+import java.io.Serializable;
+
 import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +19,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderPaymentMap {
+public class OrderPaymentMap implements Serializable{
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
