@@ -1,20 +1,25 @@
 package com.order_service.feign;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.order_service.models.ReserveStock;
+import com.order_service.models.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 
-@FeignClient(name = "PRODUCT-SERVICE", path = "/api/v1/products")
+@FeignClient(name = "PRODUCT-SERVICE")
 public interface ProductClient {
-    @GetMapping("getallproducts")
+
+    @PostMapping("/api/v1/inventory/reserveStock")
+    ResponseEntity<Response<Boolean>> reserveStock(@RequestBody ReserveStock entity);
+
+    @PostMapping("/api/v1/inventory/releaseStock")
+    ResponseEntity<Response<Boolean>> releaseStock(@RequestBody ReserveStock entity);
+
+    @GetMapping("/api/v1/products/getallproducts")
     ResponseEntity<Map<String, Object>> getAllProducts();
-    @PostMapping("getproductbyid")
+
+    @PostMapping("/api/v1/products/getproductbyid")
     ResponseEntity<Map<String, Object>> getProductById(@RequestParam Long id);
 }

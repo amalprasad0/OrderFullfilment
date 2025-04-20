@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.order_service.components.PaymentComponents;
+import com.order_service.components.ProductComponent;
 import com.order_service.entity.OrderPaymentMap;
 import com.order_service.entity.Orders;
 import com.order_service.feign.PaymentClient;
@@ -20,6 +21,7 @@ import com.order_service.models.OrderDetails;
 import com.order_service.models.OrderRequest;
 import com.order_service.models.OrderResponse;
 import com.order_service.models.OrderUpdateRequest;
+import com.order_service.models.ReserveStock;
 import com.order_service.models.Response;
 import com.order_service.repository.OrderPaymentRepository;
 import com.order_service.repository.OrdersRepository;
@@ -33,6 +35,7 @@ public class OrderService implements IOrderService {
     @Autowired
     private ProductClient productClient;
     @Autowired private PaymentComponents paymentComponents;
+    @Autowired private ProductComponent productComponent;
     @Override
     public Response<OrderResponse> createOrder(OrderRequest orderRequest) {
         try {
@@ -60,7 +63,8 @@ public class OrderService implements IOrderService {
             if (orderRequest.getPaymentStatus() == null || orderRequest.getPaymentStatus().isEmpty()) {
                 return Response.error("Payment status is invalid");
             }
-
+         
+            
             Orders order = new Orders();
             order.setDeliveryAddress(orderRequest.getDeliveryAddress());
             order.setPaymentMethod(orderRequest.getPaymentMethod());
@@ -77,10 +81,19 @@ public class OrderService implements IOrderService {
             orderPaymentMap.setPaymentResponse("PENDING");
             orderPaymentMap.setPaymentDate(orderRequest.getOrderDateTime().toString());
             orderPaymentMap.setPaymentId(0);
-
+            
             var savedOrder = orderRepository.save(order);
             var savedOrderPayment = orderPayementRepository.save(orderPaymentMap);
             if(savedOrder.getId()!=null){
+                ReserveStock reserveStock = new ReserveStock();
+                reserveStock.setOrderId(savedOrder.getId().intValue());
+                reserveStock.setProductId(Long.parseLong(orderRequest.getProductId()));
+                reserveStock.setReservedBy(orderRequest.getUserId());
+                reserveStock.setStockReserved(orderRequest.getQuantity());
+                boolean isReserved= productComponent.ReserveStock(reserveStock);
+                if(!isReserved){
+                    return Response.error("Unable to Reserve Stock");
+                }
                 CreatePaymentLink generatePaymentParams= new CreatePaymentLink();
                 generatePaymentParams.setOrderId(savedOrder.getId());
                 generatePaymentParams.setQuantity(savedOrder.getQuantity());
