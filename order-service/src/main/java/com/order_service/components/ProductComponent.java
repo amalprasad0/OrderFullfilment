@@ -22,4 +22,15 @@ public class ProductComponent {
              return false;
         }
     }
+    public boolean ReleaseStock(ReserveStock releaseStock){
+        try {
+            ResponseEntity<Response<Boolean>> reserveStockReponse= productClient.releaseStock(releaseStock);
+            if(reserveStockReponse.getBody().isSuccess()){
+                return reserveStockReponse.getBody().getData();
+            }
+             return reserveStockReponse.getBody().getData();
+        } catch (Exception e) {
+           return false;
+        }
+    }
 }

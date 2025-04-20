@@ -135,6 +135,15 @@ public class OrderService implements IOrderService {
                 Orders orders = order.get();
                 orders.setOrderStatus("CANCELED");
                 orderRepository.save(orders);
+                ReserveStock reserveStock = new ReserveStock();
+                reserveStock.setOrderId(order.get().getId().intValue());
+                reserveStock.setProductId(Long.parseLong(order.get().getProductId()));
+                reserveStock.setReservedBy(order.get().getUserId());
+                reserveStock.setStockReserved(order.get().getQuantity());
+                boolean isReserved= productComponent.ReleaseStock(reserveStock);
+                if(!isReserved){
+                    return Response.error("Unable to Reserve Stock");
+                }
                 return Response.success(true, "Order canceled successfully");
             } else {
                 return Response.error("Order not found");
