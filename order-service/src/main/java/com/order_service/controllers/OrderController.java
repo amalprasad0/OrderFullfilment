@@ -7,6 +7,7 @@ import com.order_service.interfaces.IOrderService;
 import com.order_service.models.OrderCancelRequest;
 import com.order_service.models.OrderDetails;
 import com.order_service.models.OrderRequest;
+import com.order_service.models.OrderResponse;
 import com.order_service.models.OrderUpdateRequest;
 import com.order_service.models.Response;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class OrderController {
         this.orderService = orderService;
     }
     @PostMapping("createOrder")
-    public ResponseEntity<Response<Long>> createOrder(@RequestBody OrderRequest entity) {
+    public ResponseEntity<Response<OrderResponse>> createOrder(@RequestBody OrderRequest entity) {
         return ResponseEntity.ok(orderService.createOrder(entity));
     }
     @PostMapping("canceledOrder")

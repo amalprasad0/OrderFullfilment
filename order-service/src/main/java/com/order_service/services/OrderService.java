@@ -8,13 +8,17 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.order_service.components.PaymentComponents;
 import com.order_service.entity.OrderPaymentMap;
 import com.order_service.entity.Orders;
+import com.order_service.feign.PaymentClient;
 import com.order_service.feign.ProductClient;
 import com.order_service.interfaces.IOrderService;
+import com.order_service.models.CreatePaymentLink;
 import com.order_service.models.OrderCancelRequest;
 import com.order_service.models.OrderDetails;
 import com.order_service.models.OrderRequest;
+import com.order_service.models.OrderResponse;
 import com.order_service.models.OrderUpdateRequest;
 import com.order_service.models.Response;
 import com.order_service.repository.OrderPaymentRepository;
@@ -28,9 +32,9 @@ public class OrderService implements IOrderService {
     private OrderPaymentRepository orderPayementRepository;
     @Autowired
     private ProductClient productClient;
-
+    @Autowired private PaymentComponents paymentComponents;
     @Override
-    public Response<Long> createOrder(OrderRequest orderRequest) {
+    public Response<OrderResponse> createOrder(OrderRequest orderRequest) {
         try {
             if (orderRequest == null) {
                 return Response.error("Order request is empty");
@@ -73,14 +77,30 @@ public class OrderService implements IOrderService {
             orderPaymentMap.setPaymentResponse("PENDING");
             orderPaymentMap.setPaymentDate(orderRequest.getOrderDateTime().toString());
             orderPaymentMap.setPaymentId(0);
+
             var savedOrder = orderRepository.save(order);
             var savedOrderPayment = orderPayementRepository.save(orderPaymentMap);
+            if(savedOrder.getId()!=null){
+                CreatePaymentLink generatePaymentParams= new CreatePaymentLink();
+                generatePaymentParams.setOrderId(savedOrder.getId());
+                generatePaymentParams.setQuantity(savedOrder.getQuantity());
+                generatePaymentParams.setCurrency("INR");
+                generatePaymentParams.setUnit_amount((int) savedOrder.getTotalPrice());
+                generatePaymentParams.setProductName("Test Product");
+                
+                Map<String,Object> paymentResponse= paymentComponents.CreateOrderPaymentLink(generatePaymentParams);
+                String paymentLink=(String) paymentResponse.get("paymentLink");
+                String paymentID= (String) paymentResponse.get("paymentLinkId");
+                OrderResponse orderResponse = new OrderResponse();
+                orderResponse.setOrderId(savedOrder.getId());
+                orderResponse.setPaymentLink(paymentLink);
+                orderResponse.setPaymentLinkId(paymentID);
+                return Response.success(orderResponse,"Order Created Successfully");
+            }
             if (savedOrderPayment == null) {
                 return Response.error("Failed to create order payment map");
             }
-            if (savedOrder != null) {
-                return Response.success(savedOrder.getId(), "Order created successfully");
-            }
+            
 
             return Response.error("Failed to create order");
         } catch (Exception e) {
