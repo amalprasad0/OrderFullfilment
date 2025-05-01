@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.user_service.user_service.interfaces.IUserAuthentication;
+import com.user_service.user_service.models.GetSessionToken;
 import com.user_service.user_service.models.Response;
 import com.user_service.user_service.models.userLoginParams;
 import com.user_service.user_service.models.userRegister;
@@ -29,5 +30,8 @@ public class UserAuthenticationController {
     public ResponseEntity<Response<Integer>> userLogin(@RequestBody userLoginParams userLoginParams) {
         return ResponseEntity.ok(User.loginUser(userLoginParams));
     }
-    
+    @PostMapping("getSessionToken")
+    public ResponseEntity<Response<String>> getSessionToken(  @RequestBody GetSessionToken getSessionToken) {
+        return ResponseEntity.ok(User.getSessionToken(getSessionToken));
+    }
 }

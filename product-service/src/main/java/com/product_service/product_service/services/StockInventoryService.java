@@ -1,8 +1,10 @@
 package com.product_service.product_service.services;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.product_service.product_service.entity.Inventory;
 import com.product_service.product_service.entity.StockReservations;
 import com.product_service.product_service.interfaces.IProductCategory;
@@ -10,6 +12,7 @@ import com.product_service.product_service.interfaces.IStockInventoryService;
 import com.product_service.product_service.models.AddInventory;
 import com.product_service.product_service.models.ReserveStock;
 import com.product_service.product_service.models.Response;
+import com.product_service.product_service.rabbitMq.RabbitMQProducer;
 import com.product_service.product_service.repository.InventoryRespository;
 import com.product_service.product_service.repository.ProductRepository;
 import com.product_service.product_service.repository.StockReservationRepository;
@@ -24,6 +27,9 @@ public class StockInventoryService implements IStockInventoryService {
     public InventoryRespository inventoryRepository;
     @Autowired
     public StockReservationRepository stockReservationRepository;
+    @Autowired
+    public RabbitMQProducer rabbitMQProducer;
+    @Autowired private ObjectMapper objectMapper;
 
     @Override
     public Response<Long> addInventoryStock(AddInventory entity) {
@@ -151,8 +157,12 @@ public class StockInventoryService implements IStockInventoryService {
             inventory.setStock_available(currentAvailableStock + entity.getStockReserved());
             inventory.setStock_reserved(inventory.getStock_reserved() - entity.getStockReserved());
             var savedInventory = inventoryRepository.save(inventory);
+            var releasedStock=stockReservationRepository.save(stockReservations);
             if (savedInventory == null) {
                 return Response.error("Failed to release stock: Stock release failed");
+            }
+            if(releasedStock==null){
+                Response.error("Failed to Release Stock");
             }
             var id = savedInventory.getId();
             if (id == null) {
@@ -166,5 +176,19 @@ public class StockInventoryService implements IStockInventoryService {
             return Response.error("Error releasing stock" + e.getMessage());
         }
     }
-
+    public Response<Boolean> sendtoInventoryQueue(ReserveStock entity){
+        try {
+            if (entity.getProductId() == null || entity.getProductId() <= 0) {
+                return Response.error("Failed to release stock: Product ID is invalid");
+            }
+            if (entity.getStockReserved() < 0) {
+                return Response.error("Failed to release stock: Stock reserved cannot be negative");
+            }
+            String releaseStock = objectMapper.writeValueAsString(entity);
+            rabbitMQProducer.sendMessage(releaseStock);
+            return Response.success(true, "Added to Queue");
+        } catch (Exception e) {
+            return Response.error("Error while adding to queue");
+        }
+    }
 }

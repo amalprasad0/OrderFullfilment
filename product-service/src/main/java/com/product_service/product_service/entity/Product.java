@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ManyToAny;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,7 +24,9 @@ import lombok.Setter;
 @Table(name = "products")
 @Getter
 @Setter
-@NoArgsConstructor   
+@NoArgsConstructor  
+// @Document(indexName = "product")
+
 public class Product implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
