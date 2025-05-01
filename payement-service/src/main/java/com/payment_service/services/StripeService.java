@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.netflix.discovery.converters.Auto;
 import com.payment_service.entity.PaymentLinkMap;
+import com.payment_service.entity.PaymentRefund;
 import com.payment_service.entity.UserPayment;
 import com.payment_service.interfaces.IStripePayementService;
 import com.payment_service.models.CreatePaymentLink;
@@ -19,16 +20,20 @@ import com.payment_service.models.PaymentCheckRequest;
 import com.payment_service.models.PaymentLinkResponse;
 import com.payment_service.models.Response;
 import com.payment_service.repository.PaymentLinkMapRepo;
+import com.payment_service.repository.PaymentRefundRepo;
 import com.payment_service.repository.UserPayamentRespo;
 import com.stripe.model.PaymentLink;
 import com.stripe.model.Price;
+import com.stripe.model.terminal.Reader.Action.RefundPayment;
 
 @Service
 public class StripeService implements IStripePayementService {
     @Autowired
-    private  PaymentLinkMapRepo paymentLinkMapRepo;
+    private PaymentLinkMapRepo paymentLinkMapRepo;
     @Autowired
     private UserPayamentRespo userPayamentRespo;
+    @Autowired
+    private PaymentRefundRepo paymentRefundRepo;
     @SuppressWarnings("unused")
     @Override
     public Response<PaymentLinkResponse> generatePaymentLink(CreatePaymentLink createPaymentLink) {
@@ -59,8 +64,8 @@ public class StripeService implements IStripePayementService {
             PaymentLinkMap paymentLinkMap = new PaymentLinkMap();
             paymentLinkMap.setPaymentLinkId(paymentLink.getId());
             paymentLinkMap.setPaymentLink(paymentLink.getUrl());
-           var savedLinkMap= paymentLinkMapRepo.save(paymentLinkMap);
-            if(savedLinkMap == null) {
+            var savedLinkMap = paymentLinkMapRepo.save(paymentLinkMap);
+            if (savedLinkMap == null) {
                 return Response.error("Couldn't able to save Link");
             }
             UserPayment userPayment = new UserPayment();
@@ -69,7 +74,7 @@ public class StripeService implements IStripePayementService {
             userPayment.setOrderId(createPaymentLink.getOrderId());
             userPayment.setPaymentLinkMap(paymentLinkMap);
             var savedUserPayment = userPayamentRespo.save(userPayment);
-            if(savedUserPayment == null) {
+            if (savedUserPayment == null) {
                 return Response.error("Couldn't able to save Link");
             }
             return Response.success(paymentLinkResponse, "Generated Payment Link");
@@ -140,4 +145,52 @@ public class StripeService implements IStripePayementService {
 
     }
 
+    @Override
+    public Response<String> refundAmount(String paymentLinkId) {
+        try {
+            com.stripe.param.checkout.SessionListParams listParams = com.stripe.param.checkout.SessionListParams
+                    .builder()
+                    .setLimit(1L) 
+                    .setPaymentLink(paymentLinkId)
+                    .build();
+
+            com.stripe.model.StripeCollection<com.stripe.model.checkout.Session> sessions = com.stripe.model.checkout.Session
+                    .list(listParams);
+            if (sessions.getData().isEmpty()) {
+                return Response.error("No checkout sessions found for payment link ID: " + paymentLinkId);
+            }
+
+            com.stripe.model.checkout.Session session = sessions.getData().get(0); 
+            String paymentIntentId = session.getPaymentIntent();
+
+            if (paymentIntentId == null) {
+                return Response.error("No payment intent found for session: " + session.getId());
+            }
+
+            com.stripe.param.RefundCreateParams refundParams = com.stripe.param.RefundCreateParams.builder()
+                    .setPaymentIntent(paymentIntentId)
+                    .build();
+
+            com.stripe.model.Refund refund = com.stripe.model.Refund.create(refundParams);
+            PaymentRefund paymentRefund = new PaymentRefund();
+            PaymentLinkMap paymentLinkMap = paymentLinkMapRepo.findAll().stream().filter(x -> x.getPaymentLinkId().equals(paymentLinkId))
+                    .findFirst().orElse(null);
+            if (paymentLinkMap == null) {
+                return Response.error("No payment link found for ID: " + paymentLinkId);
+            }
+            paymentRefund.setPaymentLink(paymentLinkMap);
+            paymentRefund.setRefundId(refund.getId());
+            paymentRefund.setStatus(refund.getStatus());
+
+            var savedRefund = paymentRefundRepo.save(paymentRefund);
+            if (savedRefund == null) {
+                return Response.error("Couldn't able to save refund details");
+            }
+            
+            return Response.success(refund.getId(), "Refund successful: " + refund.getId());
+
+        } catch (Exception e) {
+            return Response.error("Error on refunding the payment" + e.getMessage());
+        }
+    }
 }

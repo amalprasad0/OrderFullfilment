@@ -10,4 +10,5 @@ public interface IUserAuthentication {
 
     public Response<Integer> loginUser(userLoginParams userLogin);
     public Response<String> getSessionToken(GetSessionToken getSessionToken);
+    // public Response<Boolean> validateSessionToken(String token);
 }

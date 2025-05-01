@@ -23,3 +23,10 @@ public class SessionTokenService {
                 .compact();
     }
 }
+// public Claims decodeToken(String token) {
+//     return Jwts.parserBuilder()
+//             .setSigningKey(SECRET_KEY)
+//             .build()
+//             .parseClaimsJws(token)
+//             .getBody();
+// }

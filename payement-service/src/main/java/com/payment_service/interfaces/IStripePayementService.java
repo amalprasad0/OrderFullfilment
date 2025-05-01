@@ -10,5 +10,5 @@ import com.payment_service.models.Response;
 public interface IStripePayementService {
     public Response<PaymentLinkResponse> generatePaymentLink(CreatePaymentLink  createPaymentLink);
     public Response<?> checkPaymentStatus(Map<String, String> requestBody);
-    
+    public Response<String> refundAmount(String paymentLinkId);
 }
