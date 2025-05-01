@@ -5,18 +5,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.netflix.discovery.converters.Auto;
+import com.payment_service.entity.PaymentLinkMap;
+import com.payment_service.entity.UserPayment;
 import com.payment_service.interfaces.IStripePayementService;
 import com.payment_service.models.CreatePaymentLink;
 import com.payment_service.models.PaymentCheckRequest;
 import com.payment_service.models.PaymentLinkResponse;
 import com.payment_service.models.Response;
+import com.payment_service.repository.PaymentLinkMapRepo;
+import com.payment_service.repository.UserPayamentRespo;
 import com.stripe.model.PaymentLink;
 import com.stripe.model.Price;
 
 @Service
 public class StripeService implements IStripePayementService {
+    @Autowired
+    private  PaymentLinkMapRepo paymentLinkMapRepo;
+    @Autowired
+    private UserPayamentRespo userPayamentRespo;
     @SuppressWarnings("unused")
     @Override
     public Response<PaymentLinkResponse> generatePaymentLink(CreatePaymentLink createPaymentLink) {
@@ -44,6 +56,22 @@ public class StripeService implements IStripePayementService {
             if (paymentLink == null) {
                 Response.error("Couldn't able to generate Link");
             }
+            PaymentLinkMap paymentLinkMap = new PaymentLinkMap();
+            paymentLinkMap.setPaymentLinkId(paymentLink.getId());
+            paymentLinkMap.setPaymentLink(paymentLink.getUrl());
+           var savedLinkMap= paymentLinkMapRepo.save(paymentLinkMap);
+            if(savedLinkMap == null) {
+                return Response.error("Couldn't able to save Link");
+            }
+            UserPayment userPayment = new UserPayment();
+            userPayment.setUnit_amount(createPaymentLink.unit_amount);
+            userPayment.setCurrency(createPaymentLink.getCurrency());
+            userPayment.setOrderId(createPaymentLink.getOrderId());
+            userPayment.setPaymentLinkMap(paymentLinkMap);
+            var savedUserPayment = userPayamentRespo.save(userPayment);
+            if(savedUserPayment == null) {
+                return Response.error("Couldn't able to save Link");
+            }
             return Response.success(paymentLinkResponse, "Generated Payment Link");
         } catch (Exception e) {
             return Response.error("Error Generating Payment Link" + e.getMessage());
@@ -52,7 +80,6 @@ public class StripeService implements IStripePayementService {
 
     public Response<?> checkPaymentStatus(Map<String, String> requestBody) {
         try {
-            // Get the payment link ID or session ID from the request
             String sessionId = requestBody.get("sessionId");
             String paymentLinkId = requestBody.get("paymentLinkId");
 
@@ -62,7 +89,6 @@ public class StripeService implements IStripePayementService {
 
             Map<String, Object> response = new HashMap<>();
 
-            // If a session ID is provided, check payment status directly
             if (sessionId != null) {
                 com.stripe.model.checkout.Session session = com.stripe.model.checkout.Session.retrieve(sessionId);
 
@@ -73,7 +99,6 @@ public class StripeService implements IStripePayementService {
                         "paid".equals(session.getPaymentStatus()) && "complete".equals(session.getStatus()));
                 response.put("paymentMethod", session.getPaymentMethodCollection());
 
-                // Check if this session was created from a payment link
                 if (session.getPaymentLink() != null) {
                     response.put("paymentLinkId", session.getPaymentLink());
                 }
@@ -81,16 +106,13 @@ public class StripeService implements IStripePayementService {
                 return Response.success(response, "Status Retrieved");
             }
 
-            // If only a payment link ID is provided, list recent sessions for this payment
-            // link
             else {
                 Map<String, Object> params = new HashMap<>();
                 params.put("payment_link", paymentLinkId);
-                params.put("limit", 10); // Limit to recent 10 sessions
+                params.put("limit", 10);
 
                 com.stripe.model.checkout.SessionCollection sessions = com.stripe.model.checkout.Session.list(params);
 
-                // Process the sessions and return status information
                 List<Map<String, Object>> sessionStatusList = new ArrayList<>();
 
                 for (com.stripe.model.checkout.Session session : sessions.getData()) {
@@ -117,4 +139,5 @@ public class StripeService implements IStripePayementService {
         }
 
     }
+
 }
