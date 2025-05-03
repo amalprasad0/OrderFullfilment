@@ -146,8 +146,20 @@ public class StripeService implements IStripePayementService {
     }
 
     @Override
-    public Response<String> refundAmount(String paymentLinkId) {
+    public Response<String> refundAmount(Long orderId) {
         try {
+            UserPayment userPayment = userPayamentRespo.findAll().stream()
+                    .filter(x -> x.getOrderId() == orderId).findFirst().orElse(null);
+            if (userPayment == null) {
+                return Response.error("No payment found for order ID: " + orderId);
+            }
+            String paymentLinkId = userPayment.getPaymentLinkMap().getPaymentLinkId();
+            if (paymentLinkId == null) {
+                return Response.error("No payment link found for order ID: " + orderId);
+            }
+            if (paymentLinkId == null) {
+                return Response.error("No payment link found for order ID: " + orderId);
+            }
             com.stripe.param.checkout.SessionListParams listParams = com.stripe.param.checkout.SessionListParams
                     .builder()
                     .setLimit(1L) 

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -15,4 +16,6 @@ public interface PaymentClient {
 
     @PostMapping("/check-payment-status")
     public ResponseEntity<Map<String, Object>> getPaymentStatus(@RequestBody Map<String, Object> requestBody);
+    @PostMapping("/refund/{orderId}")
+    public ResponseEntity<Map<String,Object>> refundPayment(@PathVariable Long orderId);
 }

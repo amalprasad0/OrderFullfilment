@@ -33,8 +33,8 @@ public class StripeController {
     public ResponseEntity<Response<?>> getPaymentStatus(@RequestBody Map<String, String> requestBody){
         return ResponseEntity.ok(stripeService.checkPaymentStatus(requestBody));
     }
-     @PostMapping("/refund/{paymentLinkId}")
-    public ResponseEntity<Response<String>> refundPayment(@PathVariable String paymentLinkId) {
-        return ResponseEntity.ok(stripeService.refundAmount(paymentLinkId));
+     @PostMapping("/refund/{orderId}")
+    public ResponseEntity<Response<String>> refundPayment(@PathVariable Long orderId) {
+        return ResponseEntity.ok(stripeService.refundAmount(orderId));
     }
 }

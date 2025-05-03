@@ -15,6 +15,7 @@ public class PaymentComponents {
     
     @Autowired 
     private PaymentClient paymentClient;
+    
 
     public Map<String, Object> CreateOrderPaymentLink(CreatePaymentLink createPaymentLink) {
         Map<String, Object> responseMap = new HashMap<>();
@@ -47,6 +48,30 @@ public class PaymentComponents {
         } catch (Exception e) {
             responseMap.put("success", false);
             responseMap.put("error", "Error while generating payment link for the order: " + e.getMessage());
+            return responseMap;
+        }
+    }
+
+    public Map<String,Object> refundPayment(Long orderId){
+        try {
+            Map<String, Object> responseMap = new HashMap<>();
+            ResponseEntity<Map<String, Object>> response = paymentClient.refundPayment(orderId);
+            Map<String, Object> responseBody = response.getBody();
+
+            if (responseBody == null || !Boolean.TRUE.equals(responseBody.get("success"))) {
+                responseMap.put("success", false);
+                responseMap.put("error", "Couldn't refund the order. [Error from Payment Service]");
+                return responseMap;
+            }
+
+            String refundId = (String) responseBody.get("data");
+            responseMap.put("success", true);
+            responseMap.put("refundId", refundId);
+            return responseMap;
+        } catch (Exception e) {
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("success", false);
+            responseMap.put("error", "Error while refunding the order: " + e.getMessage());
             return responseMap;
         }
     }
