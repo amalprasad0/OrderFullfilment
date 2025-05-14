@@ -17,6 +17,7 @@ public class SessionTokenService {
     public String generateSessionToken(String userEmail) {
         return Jwts.builder()
                 .setSubject(userEmail)
+                // .setClaims("admin", "user")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 6400000))
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256)

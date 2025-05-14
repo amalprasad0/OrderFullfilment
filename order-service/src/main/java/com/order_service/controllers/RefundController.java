@@ -17,7 +17,7 @@ import com.order_service.models.Response;
 @RequestMapping("/api/v1/refund")
 public class RefundController {
     @Autowired IRefundOrderServices refundOrderServices;
-    @PostMapping("/request")
+    @PostMapping("/refundRequest")
     public ResponseEntity<Response<Long>> requestRefundOrder(@RequestBody RequestRefundOrder requestRefundOrder) {
         return ResponseEntity.ok(refundOrderServices.requestRefundOrder(requestRefundOrder));
     }
