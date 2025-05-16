@@ -30,31 +30,26 @@ public class EmailService implements IEmailService {
     @Override
     public Response<Boolean> deleiverEmail(DeliverEmail entity) {
         try {
-            // Gmail SMTP configuration
+            
             Properties props = new Properties();
             props.put("mail.smtp.host", "smtp.gmail.com");
             props.put("mail.smtp.port", "587");
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.starttls.enable", "true");
             props.put("mail.debug", "true");
-            
-            // Create authenticator with Gmail credentials
             Authenticator auth = new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(username, password);
                 }
             };
-            
             Session session = Session.getInstance(props, auth);
-            
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(entity.getEmail()));
             message.setSubject(entity.getSubject());
-            message.setText(entity.getBody(), "UTF-8", "html");  // Use HTML format if needed, or change to "plain"
+            message.setText(entity.getBody(), "UTF-8", "html");  
             message.setSentDate(new Date());
-
             Transport.send(message);
             return Response.success(true, "Email sent successfully");
         } catch (Exception e) {

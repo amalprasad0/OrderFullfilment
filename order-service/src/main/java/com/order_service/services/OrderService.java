@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.order_service.components.NotificationComponents;
 import com.order_service.components.PaymentComponents;
 import com.order_service.components.ProductComponent;
 import com.order_service.entity.OrderPaymentMap;
@@ -36,6 +37,7 @@ public class OrderService implements IOrderService {
     private ProductClient productClient;
     @Autowired private PaymentComponents paymentComponents;
     @Autowired private ProductComponent productComponent;
+    @Autowired private NotificationComponents notificationComponents;
     @Override
     public Response<OrderResponse> createOrder(OrderRequest orderRequest) {
         try {
@@ -108,6 +110,7 @@ public class OrderService implements IOrderService {
                 orderResponse.setOrderId(savedOrder.getId());
                 orderResponse.setPaymentLink(paymentLink);
                 orderResponse.setPaymentLinkId(paymentID);
+                notificationComponents.sendOrderCreationEmail();
                 return Response.success(orderResponse,"Order Created Successfully");
             }
             if (savedOrderPayment == null) {
@@ -144,6 +147,7 @@ public class OrderService implements IOrderService {
                 if(!isReserved){
                     return Response.error("Unable to Reserve Stock");
                 }
+                notificationComponents.sendOrderCancelEmail();
                 return Response.success(true, "Order canceled successfully");
             } else {
                 return Response.error("Order not found");
