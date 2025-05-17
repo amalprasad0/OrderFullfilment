@@ -27,6 +27,12 @@ public class NotificationComponents {
     private String OrderCancelBody;
     @Value("${notification.orderCanceled.footer}")
     private String OrderCancelFooter;
+    @Value("${notification.email.updateOrder.header}")
+    private String UpdateOrderHeader;
+    @Value("${notification.email.updateOrder.body}")
+    private String UpdateOrderBody;
+    @Value("${notification.email.updateOrder.footer}")
+    private String UpdateOrderFooter;
     @Autowired
     private NotificationClient notificationClient;
 
@@ -70,6 +76,15 @@ public class NotificationComponents {
                 OrderCancelBody + OrderCancelFooter);
         if (!isEmailSent) {
             System.out.println("Failed to send order cancel email.");
+            return false;
+        }
+        return true;
+    }
+    public boolean sendUpdateOrderEmail() {
+        boolean isEmailSent = sendEmail(OrderCreationHeader, OrderCreationHeader,
+                OrderCreationBody + OrderCreationFooter);
+        if (!isEmailSent) {
+            System.out.println("Failed to send order update email.");
             return false;
         }
         return true;
