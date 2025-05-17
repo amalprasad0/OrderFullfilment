@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 
 @RestController
@@ -19,7 +20,9 @@ public class EmailControllers {
     @Autowired
     private IEmailService emailService;
     @PostMapping("deleiverEmail")
-    public ResponseEntity<Response<Boolean>> deleiverEmail(@RequestBody DeliverEmail entity) {
+    public ResponseEntity<Response<Boolean>> deleiverEmail(@RequestBody DeliverEmail entity , @RequestHeader(value = "X-User-Email", required = false) String userEmail,
+            @RequestHeader(value = "X-User-Role", required = false) String userRole) {
+        
         return ResponseEntity.ok(emailService.deleiverEmail(entity));
     }
 }
