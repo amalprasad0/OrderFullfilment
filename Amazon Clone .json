@@ -1,182 +1,934 @@
-{
-  "v": 6,
-  "id": "cm8lnhp8e001bfdm0d5bu4vg9",
-  "name": "Amazon Clone ",
-  "folders": [
-    {
-      "v": 6,
-      "id": "cm8lni1l0000o42k3qeo4rgu8",
-      "name": "User Service",
-      "folders": [],
-      "requests": [
-        {
-          "v": "11",
-          "name": "RegisterUser",
-          "method": "GET",
-          "endpoint": "http://localhost:8080/products/product/5",
-          "params": [],
-          "headers": [],
-          "preRequestScript": "",
-          "testScript": "",
-          "auth": {
-            "authType": "inherit",
-            "authActive": true
+[
+  {
+    "v": 7,
+    "name": "Amazon Clone ",
+    "folders": [
+      {
+        "v": 7,
+        "name": "User Service",
+        "folders": [],
+        "requests": [
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "RegisterUser",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "http://localhost:8080/products/product/5",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
           },
-          "body": {
-            "contentType": null,
-            "body": null
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": "{\n  \"email\":\"amalprasad354@gmail.com\",\n  \"password\":\"amalkp@141\",\n  \"firstName\":\"Amal\",\n  \"lastName\":\"Prasad\",\n  \"phone\":\"7306557465\",\n  \"username\":\"amalkp\"\n  \n  \n}",
+              "contentType": "application/json"
+            },
+            "name": "Login User",
+            "method": "POST",
+            "params": [],
+            "headers": [],
+            "endpoint": "http://localhost:8080/userauth/registerUser",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
           },
-          "requestVariables": [],
-          "responses": {}
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "GetSessionToken",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          }
+        ],
+        "auth": {
+          "authType": "inherit",
+          "authActive": true
         },
-        {
-          "v": "11",
-          "name": "Login User",
-          "method": "POST",
-          "endpoint": "http://localhost:8080/userauth/registerUser",
-          "params": [],
-          "headers": [],
-          "preRequestScript": "",
-          "testScript": "",
-          "auth": {
-            "authType": "inherit",
-            "authActive": true
-          },
-          "body": {
-            "contentType": "application/json",
-            "body": "{\n  \"email\":\"amalprasad354@gmail.com\",\n  \"password\":\"amalkp@141\",\n  \"firstName\":\"Amal\",\n  \"lastName\":\"Prasad\",\n  \"phone\":\"7306557465\",\n  \"username\":\"amalkp\"\n  \n  \n}"
-          },
-          "requestVariables": [],
-          "responses": {}
-        }
-      ],
-      "auth": {
-        "authType": "inherit",
-        "authActive": true
+        "headers": [],
+        "_ref_id": "coll_mas46hxz_f312dde2-6f1b-46cf-a041-6b9d53ac9789"
       },
-      "headers": [],
-      "_ref_id": "coll_m8wjgwx5_afd6534f-8cd7-438b-862b-44817e5ce76b"
+      {
+        "v": 7,
+        "name": "product-service",
+        "folders": [],
+        "requests": [
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": "{\n  \"categoryName\": \"Smartwatches\",\n  \"categoryDescription\": \"Wearable Technology\",\n  \"createdBy\": 5,\n  \"updatedBy\": 6,\n  \"isDeleted\": false,\n  \"isActive\": true\n}\n",
+              "contentType": "application/json"
+            },
+            "name": "AddCategory",
+            "method": "POST",
+            "params": [],
+            "headers": [],
+            "endpoint": "http://localhost:8090/api/v1/categories/AddCategory",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": "{\n  \"productName\": \"Samsung Galaxy S24\",\n  \"productDescription\": \"Latest Samsung flagship smartphone with AI-powered camera.\",\n  \"brand\": \"Samsung\",\n  \"productCategoryId\": 1,\n  \"createdBy\": 101,\n  \"updatedBy\": 101,\n  \"isDeleted\": false,\n  \"productImageUrl\": \"https://example.com/images/samsung-galaxy-s24.jpg\",\n  \"isActive\": true\n}\n",
+              "contentType": "application/json"
+            },
+            "name": "AddProduct",
+            "method": "POST",
+            "params": [],
+            "headers": [],
+            "endpoint": "http://localhost:8090/api/v1/products/AddProduct",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "GetAllCategories",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "GetAllProducts",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "http://localhost:8090/api/v1/products/GetAllProducts",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "getproductbyid",
+            "method": "POST",
+            "params": [],
+            "headers": [],
+            "endpoint": "http://localhost:8090/api/v1/products/getproductbyid?id=4",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": "{\n  \"inventoryCode\": 1001,\n  \"productId\": 4,\n  \"stockAvailable\": 200,\n  \"stockReserved\": 0,\n  \"isActive\": true,\n  \"createdBy\": 1,\n  \"updatedBy\": 1\n}\n",
+              "contentType": "application/json"
+            },
+            "name": "AddStockInventory",
+            "method": "POST",
+            "params": [],
+            "headers": [],
+            "endpoint": "http://localhost:8090/api/v1/inventory/addInventoryStock",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": "{\n  \"productId\":4,\n  \"StockReserved\":10,\n  \"orderId\":100,\n  \"reservedBy\":2300\n}",
+              "contentType": "application/json"
+            },
+            "name": "StockReserve",
+            "method": "POST",
+            "params": [],
+            "headers": [],
+            "endpoint": "http://localhost:8090/api/v1/inventory/reserveStock",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": "{\n  \"productId\":4,\n  \"StockReserved\":10,\n  \"orderId\":100,\n  \"reservedBy\":2300\n}",
+              "contentType": "application/json"
+            },
+            "name": "Release Stock",
+            "method": "POST",
+            "params": [],
+            "headers": [],
+            "endpoint": "http://localhost:8090/api/v1/inventory/releaseStock",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "ReleaseStock",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "testRequest",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          }
+        ],
+        "auth": {
+          "authType": "inherit",
+          "authActive": true
+        },
+        "headers": [],
+        "_ref_id": "coll_mas46hxz_cc9b4f9a-5ac0-4f8d-8c98-3ded984745f7"
+      },
+      {
+        "v": 7,
+        "name": "order-service",
+        "folders": [],
+        "requests": [
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "create-order",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "cancelOrder",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "updateOrder",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "getOrderById",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "getOrderByUser",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "OderPhase/updateOrderStatus",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          }
+        ],
+        "auth": {
+          "authType": "inherit",
+          "authActive": true
+        },
+        "headers": [],
+        "_ref_id": "coll_mas46hxz_f98f95b6-0242-4e5e-9eb2-2702995adec9"
+      },
+      {
+        "v": 7,
+        "name": "Payment-Service",
+        "folders": [],
+        "requests": [
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "refund-payment",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "create-payement-link",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "11",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "checkout status",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          }
+        ],
+        "auth": {
+          "authType": "inherit",
+          "authActive": true
+        },
+        "headers": [],
+        "_ref_id": "coll_mas46hxz_c321de31-2481-46ef-8c86-2b22e1727ccf"
+      },
+      {
+        "v": 7,
+        "name": "Gateway-Api",
+        "folders": [],
+        "requests": [
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "SendNotification",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "CreateOrder",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "GetAccessToken",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "CancelOrder",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Get Order By OrderId",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Update Order Phase ",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Refund Payment",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Approve Refund Payment",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Change Order Status",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Add Inventory Stock",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Reserve Stock",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Release Stock",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Get Product By Category",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Add Category",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Add Product",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Get All Product",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Get Product by Id",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          },
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "Register User ",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          }
+        ],
+        "auth": {
+          "authType": "inherit",
+          "authActive": true
+        },
+        "headers": [],
+        "_ref_id": "coll_mas46hxz_2202949f-16ed-450f-b7b0-1783408a5434"
+      },
+      {
+        "v": 7,
+        "name": "Notification-service",
+        "folders": [],
+        "requests": [
+          {
+            "v": "12",
+            "auth": {
+              "authType": "inherit",
+              "authActive": true
+            },
+            "body": {
+              "body": null,
+              "contentType": null
+            },
+            "name": "DeliverEmail",
+            "method": "GET",
+            "params": [],
+            "headers": [],
+            "endpoint": "https://echo.hoppscotch.io",
+            "responses": {},
+            "testScript": "",
+            "preRequestScript": "",
+            "requestVariables": []
+          }
+        ],
+        "auth": {
+          "authType": "inherit",
+          "authActive": true
+        },
+        "headers": [],
+        "_ref_id": "coll_mas46hxz_31d3eea1-d399-4194-80a9-fc1af51e2635"
+      }
+    ],
+    "requests": [
+      {
+        "v": "12",
+        "auth": {
+          "authType": "inherit",
+          "authActive": true
+        },
+        "body": {
+          "body": null,
+          "contentType": null
+        },
+        "name": "For Testing Dev API",
+        "method": "GET",
+        "params": [],
+        "headers": [],
+        "endpoint": "https://echo.hoppscotch.io",
+        "responses": {},
+        "testScript": "",
+        "preRequestScript": "",
+        "requestVariables": []
+      }
+    ],
+    "auth": {
+      "authType": "inherit",
+      "authActive": true
     },
-    {
-      "v": 6,
-      "id": "cm8ubjpbi0kmmmbs8e23re23c",
-      "name": "product-service",
-      "folders": [],
-      "requests": [
-        {
-          "v": "11",
-          "name": "AddCategory",
-          "method": "GET",
-          "endpoint": "https://echo.hoppscotch.io",
-          "params": [],
-          "headers": [],
-          "preRequestScript": "",
-          "testScript": "",
-          "auth": {
-            "authType": "inherit",
-            "authActive": true
-          },
-          "body": {
-            "contentType": null,
-            "body": null
-          },
-          "requestVariables": [],
-          "responses": {}
-        },
-        {
-          "v": "11",
-          "name": "AddProduct",
-          "method": "GET",
-          "endpoint": "https://echo.hoppscotch.io",
-          "params": [],
-          "headers": [],
-          "preRequestScript": "",
-          "testScript": "",
-          "auth": {
-            "authType": "inherit",
-            "authActive": true
-          },
-          "body": {
-            "contentType": null,
-            "body": null
-          },
-          "requestVariables": [],
-          "responses": {}
-        },
-        {
-          "v": "11",
-          "name": "GetAllCategories",
-          "method": "GET",
-          "endpoint": "https://echo.hoppscotch.io",
-          "params": [],
-          "headers": [],
-          "preRequestScript": "",
-          "testScript": "",
-          "auth": {
-            "authType": "inherit",
-            "authActive": true
-          },
-          "body": {
-            "contentType": null,
-            "body": null
-          },
-          "requestVariables": [],
-          "responses": {}
-        },
-        {
-          "v": "11",
-          "name": "GetAllProducts",
-          "method": "GET",
-          "endpoint": "https://echo.hoppscotch.io",
-          "params": [],
-          "headers": [],
-          "preRequestScript": "",
-          "testScript": "",
-          "auth": {
-            "authType": "inherit",
-            "authActive": true
-          },
-          "body": {
-            "contentType": null,
-            "body": null
-          },
-          "requestVariables": [],
-          "responses": {}
-        },
-        {
-          "v": "11",
-          "name": "getproductbyid",
-          "method": "GET",
-          "endpoint": "https://echo.hoppscotch.io",
-          "params": [],
-          "headers": [],
-          "preRequestScript": "",
-          "testScript": "",
-          "auth": {
-            "authType": "inherit",
-            "authActive": true
-          },
-          "body": {
-            "contentType": null,
-            "body": null
-          },
-          "requestVariables": [],
-          "responses": {}
-        }
-      ],
-      "auth": {
-        "authType": "inherit",
-        "authActive": true
-      },
-      "headers": [],
-      "_ref_id": "coll_m8wjgwx5_107d4493-2272-4598-bd5b-41dcef75040d"
-    }
-  ],
-  "requests": [],
-  "auth": {
-    "authType": "inherit",
-    "authActive": true
-  },
-  "headers": [],
-  "_ref_id": "coll_m8wjgwx5_b48469a2-dcf9-4c19-8254-ed9048dea1d2"
-}
+    "headers": [],
+    "_ref_id": "coll_mas46hxz_3eaf6ba8-e606-4d67-92d9-5dcd1cbd2f92"
+  }
+]
