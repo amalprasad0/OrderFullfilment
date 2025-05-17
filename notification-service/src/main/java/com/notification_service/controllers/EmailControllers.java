@@ -22,7 +22,8 @@ public class EmailControllers {
     @PostMapping("deleiverEmail")
     public ResponseEntity<Response<Boolean>> deleiverEmail(@RequestBody DeliverEmail entity , @RequestHeader(value = "X-User-Email", required = false) String userEmail,
             @RequestHeader(value = "X-User-Role", required = false) String userRole) {
-        
+        System.out.println("Email: "+userEmail);
+                System.out.println("Role:"+userRole);
         return ResponseEntity.ok(emailService.deleiverEmail(entity));
     }
 }
