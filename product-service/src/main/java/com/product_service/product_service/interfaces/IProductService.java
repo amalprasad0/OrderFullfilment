@@ -9,4 +9,5 @@ public interface IProductService {
     public Response<Long> AddProduct(com.product_service.product_service.models.AddProduct entity);
     public Response<List<Product>> GetAllProduct();
     public Response<Product> GetProductById(Long id);
+    
 }

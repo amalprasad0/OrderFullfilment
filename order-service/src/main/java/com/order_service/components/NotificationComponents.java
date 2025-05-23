@@ -21,17 +21,17 @@ public class NotificationComponents {
     private String OrderCreationBody;
     @Value("${notification.email.orderCreation.footer}")
     private String OrderCreationFooter;
-    @Value("${notification.orderCanceled.header}")
+    @Value("${notification.email.orderCanceled.header}")
     private String OrderCancelHeader;
-    @Value("$notification.orderCanceled.body}")
+    @Value("$notification.email.orderCanceled.body}")
     private String OrderCancelBody;
-    @Value("${notification.orderCanceled.footer}")
+    @Value("${notification.email.orderCanceled.footer}")
     private String OrderCancelFooter;
-    @Value("${notification.email.updateOrder.header}")
+    @Value("${notification.email.orderUpate.header}")
     private String UpdateOrderHeader;
-    @Value("${notification.email.updateOrder.body}")
+    @Value("${notification.email.orderUpate.body}")
     private String UpdateOrderBody;
-    @Value("${notification.email.updateOrder.footer}")
+    @Value("${notification.email.orderUpate.footer}")
     private String UpdateOrderFooter;
     @Autowired
     private NotificationClient notificationClient;

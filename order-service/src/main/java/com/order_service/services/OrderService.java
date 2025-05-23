@@ -1,6 +1,9 @@
 package com.order_service.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -254,50 +257,63 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    @Cacheable(value = "order", key = "#userId")
+    // @Cacheable(value = "order", key = "#userId")
 
-    public Response<OrderDetails> getOrderByUserId(Long userId) {
-        try {
-            if (userId == null || userId <= 0) {
-                return Response.error("User ID is invalid");
-            }
-            Orders order = orderRepository.findAll().stream()
-                    .filter(o -> o.getUserId() == userId)
-                    .findFirst()
-                    .orElse(null);
-            if (order != null) {
-                ResponseEntity<Map<String, Object>> productResponse = productClient
-                        .getProductById(Long.parseLong(order.getProductId()));
-                Map<String, Object> responseBody = productResponse.getBody();
-                boolean success = (boolean) responseBody.get("success");
-                if (!success)
-                    return Response.error("Couldn't find the Product Details");
-
-                @SuppressWarnings("unchecked")
-                Map<String, Object> productData = (Map<String, Object>) responseBody.get("data");
-
-                String productName = (String) productData.get("productName");
-                String productImageUrl = (String) productData.get("productImageUrl");
-                @SuppressWarnings("unchecked")
-                OrderDetails orderDetails = new OrderDetails();
-                orderDetails.setOrderId(order.getId());
-                orderDetails.setOrderDate(order.getOrderDate());
-                orderDetails.setDeliveryAddress(order.getDeliveryAddress());
-                orderDetails.setOrderStatus(order.getOrderStatus());
-                orderDetails.setProductId(Long.parseLong(order.getProductId()));
-                orderDetails.setProductName(productName);
-                orderDetails.setProductImgUrl(productImageUrl);
-                orderDetails.setQuantity(order.getQuantity());
-                orderDetails.setUserId(order.getUserId());
-
-                System.out.println("response" + productResponse);
-                return Response.success(orderDetails, "Order found successfully");
-            } else {
-                return Response.error("Order not found");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.error("An error occurred while fetching the order: " + e.getMessage());
+   public Response<List<OrderDetails>> getOrderByUserId(Long userId) {
+    try {
+        if (userId == null || userId <= 0) {
+            return Response.error("User ID is invalid");
         }
+
+        List<Orders> orders = orderRepository.findAll().stream()
+                .filter(o -> o.getUserId() == userId)
+                .collect(Collectors.toList());
+
+        if (orders.isEmpty()) {
+            return Response.error("No orders found for the user");
+        }
+
+        List<OrderDetails> orderDetailsList = new ArrayList<>();
+
+        for (Orders order : orders) {
+            ResponseEntity<Map<String, Object>> productResponse = productClient
+                    .getProductById(Long.parseLong(order.getProductId()));
+            Map<String, Object> responseBody = productResponse.getBody();
+
+            if (responseBody == null || !(boolean) responseBody.get("success")) {
+                continue; // skip this order if product fetch fails
+            }
+
+            @SuppressWarnings("unchecked")
+            Map<String, Object> productData = (Map<String, Object>) responseBody.get("data");
+
+            String productName = (String) productData.get("productName");
+            String productImageUrl = (String) productData.get("productImageUrl");
+
+            OrderDetails orderDetails = new OrderDetails();
+            orderDetails.setOrderId(order.getId());
+            orderDetails.setOrderDate(order.getOrderDate());
+            orderDetails.setDeliveryAddress(order.getDeliveryAddress());
+            orderDetails.setOrderStatus(order.getOrderStatus());
+            orderDetails.setProductId(Long.parseLong(order.getProductId()));
+            orderDetails.setProductName(productName);
+            orderDetails.setProductImgUrl(productImageUrl);
+            orderDetails.setQuantity(order.getQuantity());
+            orderDetails.setUserId(order.getUserId());
+
+            orderDetailsList.add(orderDetails);
+        }
+
+        if (orderDetailsList.isEmpty()) {
+            return Response.error("Orders found, but product details missing for all.");
+        }
+
+        return Response.success(orderDetailsList, "Orders fetched successfully");
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return Response.error("An error occurred while fetching orders: " + e.getMessage());
     }
+}
+
 }

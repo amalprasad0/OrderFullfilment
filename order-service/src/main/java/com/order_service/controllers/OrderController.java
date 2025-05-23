@@ -10,6 +10,9 @@ import com.order_service.models.OrderRequest;
 import com.order_service.models.OrderResponse;
 import com.order_service.models.OrderUpdateRequest;
 import com.order_service.models.Response;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,7 +45,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrderById(orderId));
     }
     @PostMapping("getOrderByUserId")
-    public ResponseEntity<Response<OrderDetails>> getOrderByUserId(@RequestParam Long userId) {
+    public ResponseEntity<Response<List<OrderDetails>>> getOrderByUserId(@RequestParam Long userId) {
         return ResponseEntity.ok(orderService.getOrderByUserId(userId));
     }
 }
