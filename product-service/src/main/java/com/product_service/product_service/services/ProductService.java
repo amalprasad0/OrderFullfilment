@@ -13,6 +13,7 @@ import com.product_service.product_service.models.AddProductRating;
 import com.product_service.product_service.models.Response;
 import com.product_service.product_service.repository.ProductRatingRepository;
 import com.product_service.product_service.repository.ProductRepository;
+import com.product_service.product_service.search.ProductSearchService;
 
 import org.springframework.cache.annotation.Cacheable;
 
@@ -24,6 +25,8 @@ public class ProductService implements IProductService {
     public ProductRepository productRepository;
     @Autowired
     public ProductRatingRepository productRatingRepository;
+    @Autowired
+private ProductSearchService productSearchService;
     @Override
     public Response<Long> AddProduct(com.product_service.product_service.models.AddProduct entity) {
         try{
@@ -47,6 +50,7 @@ public class ProductService implements IProductService {
             if (id == null) {
                 return Response.error("Failed to add product: ID is null");
             }
+            productSearchService.indexProduct(savedProduct);
             return Response.success(id, "Product added successfully");
         }catch(Exception e){
             return Response.error("Failed to add product: " + e.getMessage());

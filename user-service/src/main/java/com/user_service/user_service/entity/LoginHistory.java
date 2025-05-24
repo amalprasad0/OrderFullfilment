@@ -33,6 +33,7 @@ public class LoginHistory {
     private LocalDateTime loginTime;
     private LocalDateTime logoutTime;
     private String loginStatus;
+    private String loginMethod;
     @PrePersist
     protected void onCreate() {
         loginTime = LocalDateTime.now();
