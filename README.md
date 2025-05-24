@@ -35,6 +35,9 @@ Backend: Spring Boot (Java) | Database: PostgreSQL
 ✨Performance Optimization - Caching strategies & DB optimization
 ✨Distributed Systems - Service communication & data consistency
 
+#System Design Diagram :
+<img src="https://github.com/amalprasad0/OrderFullfilment/blob/master/Blank%20diagram%20(1).png"/>
+
 
 🎯 Why This Project:
 
