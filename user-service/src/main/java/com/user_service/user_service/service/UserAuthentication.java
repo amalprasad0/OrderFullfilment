@@ -32,6 +32,7 @@ public class UserAuthentication implements IUserAuthentication {
             user.setPassword(userRegister.getPassword());
             user.setPhone(userRegister.getPhone());
             user.setUsername(userRegister.getUsername());
+            user.setRole(userRegister.getRole());
             userRepo.save(user);
             return Response.success(1, "User Registered Successfully");
         } catch (Exception e) {
@@ -63,7 +64,7 @@ public class UserAuthentication implements IUserAuthentication {
                 return Response.error("User Not Found");
             }
             if (user.getPassword().equals(getSessionToken.getUserPassword())) {
-                String token = _tokenService.generateSessionToken(user.getEmail());
+                String token = _tokenService.generateSessionToken(user.getEmail(),user.getRole());
                 return Response.success(token, "Session Token Generated Successfully");
             }
         } catch (Exception e) {

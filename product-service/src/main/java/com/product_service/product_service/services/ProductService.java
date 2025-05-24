@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.product_service.product_service.entity.Product;
+import com.product_service.product_service.entity.ProductRatings;
 import com.product_service.product_service.interfaces.IProductCategory;
 import com.product_service.product_service.interfaces.IProductService;
+import com.product_service.product_service.models.AddProductRating;
 import com.product_service.product_service.models.Response;
+import com.product_service.product_service.repository.ProductRatingRepository;
 import com.product_service.product_service.repository.ProductRepository;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -19,6 +22,8 @@ public class ProductService implements IProductService {
     public IProductCategory productCategoryRepository;
     @Autowired
     public ProductRepository productRepository;
+    @Autowired
+    public ProductRatingRepository productRatingRepository;
     @Override
     public Response<Long> AddProduct(com.product_service.product_service.models.AddProduct entity) {
         try{
@@ -72,5 +77,57 @@ public class ProductService implements IProductService {
             return Response.error("Failed to get product: " + e.getMessage());
         }
     }
-    
+    @Override
+    public Response<Boolean> AddProductRating(AddProductRating productRating) {
+        try {
+            var productOpt = productRepository.findById(productRating.getProductId());
+            if (productOpt.isEmpty()) {
+                return Response.error("Failed to add rating: Product ID does not exist");
+            }
+            Product product = productOpt.get();
+            if(productRating.getRating() < 1 || productRating.getRating() > 5) {
+                return Response.error("Failed to add rating: Rating must be between 1 and 5");
+            }
+            if(productRating.getComment() == null || productRating.getComment().isEmpty()) {
+                return Response.error("Failed to add rating: Comment cannot be empty");
+            }
+            if(productRating.getUserId() == null || productRating.getUserId().isEmpty()) {
+                return Response.error("Failed to add rating: User ID cannot be empty");
+            }
+            // if(product.isDeleted() || !product.isActive()) {
+            //     return Response.error("Failed to add rating: Product is not active or has been deleted");
+            // }
+            ProductRatings existingRating = productRatingRepository.findAll()
+                .stream()
+                .filter(r -> r.getProductId().equals(product) && r.getUserId().equals(Long.parseLong(productRating.getUserId())))
+                .findFirst()
+                .orElse(null);
+            if (existingRating != null) {
+                existingRating.setRating(productRating.getRating());
+                existingRating.setReview(productRating.getComment());
+                existingRating.setUpdatedBy(productRating.getUserId());
+                ProductRatings updatedProductRating = productRatingRepository.save(existingRating);
+                if (updatedProductRating == null) {
+                    return Response.error("Failed to update rating: Rating could not be updated");
+                }
+                return Response.success(true, "Rating updated successfully");
+                // return Response.error("Failed to add rating: User has already rated this product");
+            }
+            ProductRatings productRatingEntity = new ProductRatings();
+            productRatingEntity.setProductId(product);
+            productRatingEntity.setUserId(Long.parseLong(productRating.getUserId()));
+            productRatingEntity.setRating(productRating.getRating());
+            productRatingEntity.setReview(productRating.getComment());
+            productRatingEntity.setCreatedBy(productRating.getUserId());
+            productRatingEntity.setUpdatedBy(productRating.getUserId());
+            productRatingEntity.setDeleted(false);
+            ProductRatings savedProductRating = productRatingRepository.save(productRatingEntity);
+            if (savedProductRating == null) {
+                return Response.error("Failed to add rating: Rating could not be saved");
+            }
+            return Response.success(true, "Rating added successfully");
+        } catch (Exception e) {
+            return Response.error("Failed to add rating: " + e.getMessage());
+        }
+    }
 }

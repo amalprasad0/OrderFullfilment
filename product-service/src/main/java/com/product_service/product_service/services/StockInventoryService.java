@@ -1,18 +1,22 @@
 package com.product_service.product_service.services;
 
+import org.hibernate.sql.Delete;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.product_service.product_service.entity.DeleteInventories;
 import com.product_service.product_service.entity.Inventory;
 import com.product_service.product_service.entity.StockReservations;
 import com.product_service.product_service.interfaces.IProductCategory;
 import com.product_service.product_service.interfaces.IStockInventoryService;
 import com.product_service.product_service.models.AddInventory;
+import com.product_service.product_service.models.DeleteInventory;
 import com.product_service.product_service.models.ReserveStock;
 import com.product_service.product_service.models.Response;
 import com.product_service.product_service.rabbitMq.RabbitMQProducer;
+import com.product_service.product_service.repository.DeletedInventoryRepository;
 import com.product_service.product_service.repository.InventoryRespository;
 import com.product_service.product_service.repository.ProductRepository;
 import com.product_service.product_service.repository.StockReservationRepository;
@@ -29,6 +33,9 @@ public class StockInventoryService implements IStockInventoryService {
     public StockReservationRepository stockReservationRepository;
     @Autowired
     public RabbitMQProducer rabbitMQProducer;
+    @Autowired
+    public DeletedInventoryRepository deletedInventoryRepository;
+
     @Autowired private ObjectMapper objectMapper;
 
     @Override
@@ -189,6 +196,38 @@ public class StockInventoryService implements IStockInventoryService {
             return Response.success(true, "Added to Queue");
         } catch (Exception e) {
             return Response.error("Error while adding to queue");
+        }
+    }
+    
+    @Override
+    public Response<Long> deleteInventory(DeleteInventory entity) {
+        try {
+            Inventory inventory = inventoryRepository.findById(entity.getInventoryId())
+                    .orElseThrow(() -> new RuntimeException("Inventory not found with ID: " + entity.getInventoryId()));
+            if (inventory.isDeleted()) {
+                return Response.error("Inventory already deleted");
+            }
+            if(inventory.getStock_reserved() > 0) {
+                return Response.error("Cannot delete inventory with available or reserved stock");
+            }
+           DeleteInventories deletedInventory = new DeleteInventories();
+            deletedInventory.setInventoryId(inventory);
+            deletedInventory.setReason(null != entity.getReason() ? entity.getReason() : "No reason provided");
+            deletedInventory.setUserId(entity.getUserId());
+          DeleteInventories savedDeletedInventories=  deletedInventoryRepository.save(deletedInventory);
+            if (savedDeletedInventories == null) {
+                return Response.error("Failed to save deleted inventory record");
+            }
+
+            inventory.setDeleted(true);
+            inventory.setUpdatedBy(  Long.parseLong(entity.getUserId()));
+           Inventory updatedInventory= inventoryRepository.save(inventory);
+            if(updatedInventory == null) {
+                return Response.error("Failed to delete inventory: Inventory update failed");
+            }
+            return Response.success(deletedInventory.getId(), "Inventory deleted successfully");
+        } catch (Exception e) {
+            return Response.error("Error deleting inventory" + e.getMessage());
         }
     }
 }

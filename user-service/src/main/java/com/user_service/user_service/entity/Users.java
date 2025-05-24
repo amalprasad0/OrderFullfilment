@@ -37,6 +37,8 @@ public class Users {
     private LocalDateTime updatedAt;
 
     private Boolean active;
+    
+    private String role;
 
     @PrePersist
     protected void onCreate() {

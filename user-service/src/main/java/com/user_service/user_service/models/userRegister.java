@@ -14,5 +14,6 @@ public class userRegister {
     private String lastName;
     private String phone;
     private String username;
+    private String role; 
 
 }
